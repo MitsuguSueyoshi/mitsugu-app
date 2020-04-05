@@ -62,9 +62,12 @@ jobs:
     working_directory: ~/mitsugu-app
     steps:
       - checkout
+      - restore_cache:
+          name: bundle installの結果をrestore
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
       - run:
           name: bundle install
-          command: bundle install --path vendor/bundle
+          command: bundle install --jobs=4 --retry=3 --path vendor/bundle
       - run: 
           name: rubocopを実行
           command: bundle exec rubocop
