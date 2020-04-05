@@ -1,3 +1,4 @@
+# 将来的には対応する規約の読込
 inherit_from: .rubocop_todo.yml
 
 # 追加した規約ファイル読込
@@ -5,11 +6,34 @@ require:
   - rubocop-rails
 
 AllCops:
+  # Rubyバージョン指定
+  TargetRubyVersion: 2.5.3
+  # lintの検査範囲から除外
   Exclude:
+    - 'config.ru'
+    - 'bin/**'
+    - 'lib/**'
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - !ruby/regexp /old_and_unused\.rb$/
     - 'vendor/**/*'
-  Rails:
-    Enabled: true
   DisplayCopNames: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: false
+
+Style/HashTransformKeys:
+  Enabled: false
+
+Style/HashTransformValues:
+  Enabled: false
 
 Layout/AccessModifierIndentation:
   Enabled: false
@@ -420,6 +444,9 @@ Style/RedundantCapitalW:
   Enabled: false
 
 Style/RedundantPercentQ:
+  Enabled: false
+
+Style/MixinUsage:
   Enabled: false
 
 # Layout/UnneededPercentX:
