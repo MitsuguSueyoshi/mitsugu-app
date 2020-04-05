@@ -31,9 +31,22 @@ jobs:
           name: テストの実行
           command: bundle exec rspec
 
+  lint:
+    docker:
+      - image: circleci/ruby:2.5.3-node-browsers
+    working_directory: ~/mitsugu-app
+    steps:
+      - checkout
+      - run:
+          name: bundle install
+          command: bundle install --path vendor/bundle
+      - run: 
+          name: rubocopを実行
+          command: bundle exec rubocop
 
 workflows:
   version: 2
   workflows:
     jobs:
       - test
+      - lint
