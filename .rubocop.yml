@@ -4,10 +4,15 @@ inherit_from: .rubocop_todo.yml
 # 追加した規約ファイル読込
 require:
   - rubocop-rails
+  - rubocop-rspec
 
 AllCops:
   # Rubyバージョン指定
   TargetRubyVersion: 2.5.3
+  Include:
+    - rubocop-rspec
+    - 'spec/**/*'
+    #- 'app/**/*'
   # lintの検査範囲から除外
   Exclude:
     - 'config.ru'
