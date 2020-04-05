@@ -1,6 +1,28 @@
 version: 2
 
 jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.5.3-node-browsers
+        environment:
+          RAILS_ENV: test
+    working_directory: ~/mitsugu-app
+    steps:
+      - checkout
+      - restore_cache:
+          name: bundle installの結果をrestore
+          keys: 
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - v1-dependencies-
+      - run:
+          name: bundle installを実行
+          command: bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - save_cache:
+          name: bundle installの結果をキャッシュ
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
   test:
     docker:
       - image: circleci/ruby:2.5.3-node-browsers
@@ -13,9 +35,12 @@ jobs:
     working_directory: ~/mitsugu-app
     steps:
       - checkout
+      - restore_cache:
+          name: bundle installの結果をrestore
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
       - run:
           name: bundle install
-          command: bundle install --path vendor/bundle
+          command: bundle install --jobs=4 --retry=3 --path vendor/bundle
       - run:
           name: データベースの起動を待機
           command: dockerize -wait tcp://127.0.0.1:3306 -timeout 1m
@@ -37,9 +62,12 @@ jobs:
     working_directory: ~/mitsugu-app
     steps:
       - checkout
+      - restore_cache:
+          name: bundle installの結果をrestore
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
       - run:
           name: bundle install
-          command: bundle install --path vendor/bundle
+          command: bundle install --jobs=4 --retry=3 --path vendor/bundle
       - run: 
           name: rubocopを実行
           command: bundle exec rubocop
@@ -48,5 +76,10 @@ workflows:
   version: 2
   workflows:
     jobs:
-      - test
-      - lint
+      - build
+      - test:
+          requires:
+            - build
+      - lint:
+          requires:
+            - build
