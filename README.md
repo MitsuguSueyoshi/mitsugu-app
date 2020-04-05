@@ -1,24 +1,29 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Techonology
+* Docker
+* docker-compose(ローカル環境構築)
+* CircleCI(rspec/rubocopがプッシュされた時に自動で動く)(cacheを使用し高速でCIを実行)
 
-Things you may want to cover:
+# Requirement
+* Docker
+* docker-compose
 
-* Ruby version
+# Installation
+* imageを構築(コンテナは作成しない)
+```bash
+$ docker-compose build
+```
+* データベース生成
+```bash
+$ docker-compose run --rm web rails db:create
+```
+* マイグレーション
+ ```bash
+$ docker-compose run --rm web rails db:migrate
+```
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* 起動
+ ```bash
+$ docker-compose up
+```
