@@ -504,3 +504,6 @@ Metrics/ParameterLists:
 
 Metrics/PerceivedComplexity:
   Enabled: false
+
+RSpec/DescribedClass:
+  Enabled: false
